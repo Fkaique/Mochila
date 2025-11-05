@@ -1,20 +1,21 @@
-var items=[]
-var values=[]
-window.addEventListener("keydown",(k)=>{
-    if (k.key.length===1 && /^[a-zA-Z]$/.test(k.key)){
-        create_item(k.key)
+var items = []
+var blocks = []
+var values = new Map()
+
+window.addEventListener("keydown", (k)=>{
+    if (k.key.length === 1 && /^[a-zA-Z]$/.test(k.key)){
+        createItem(k.key)
         items.push(k.key)
     }
 })
-function create_item(icon){
-    if (values.some(x=>x.dataset.item==icon)){
-        values.forEach(x=>{
-            if (x.dataset.item==icon){
-                const value = x.querySelector(".counter")
-                value.innerHTML = `${Number(value.innerHTML)+1}`
-            }
-        })
-        console.log("neh")
+
+function createItem(icon){
+    if (values.has(icon)){
+        values.set(icon, values.get(icon)+1)
+        var i = blocks
+            .find(b => b.querySelector(".item").dataset.item == icon)
+            .querySelector(".counter");
+        i.innerHTML = Number(i.innerHTML)+1
     }else{
         var inventario = document.getElementById("inventario")
         var block = document.createElement("div")
@@ -30,9 +31,10 @@ function create_item(icon){
         items.style.backgroundColor = getColorForLetter(icon)
         item.append(items)
         item.append(count)
-        values.push(item)
         block.append(item)
         block.append(icon)
+        values.set(icon, 1)
+        blocks.push(block)
         inventario.append(block)
     }
 }
